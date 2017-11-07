@@ -1,1 +1,1 @@
-worker: java -jar target/magma-bot-1.0.0.jar
+worker: java -cp target/magma-bot-1.0.0.jar Main
