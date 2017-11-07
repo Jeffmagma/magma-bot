@@ -29,23 +29,28 @@ public class MagmaBot implements IListener<Event> {
             IChannel channel = messageReceivedEvent.getChannel();
             IMessage message = messageReceivedEvent.getMessage();
             String text = message.getContent().trim();
+            if (text.length() > 0 && text.charAt(0) != '!') return;
             if (text.equals("!help")) {
-                channel.sendMessage(message.getAuthor().mention() + " asked for help");
+                channel.sendMessage(message.getAuthor().mention() + ", type `!todo` to view your todolist, and `!todoadd [item]` to add an item to your todolist!");
             } else if (text.equals("!embed")) {
                 EmbedBuilder embed = new EmbedBuilder().withColor(Color.RED);
                 embed.appendField("Can i", "newline\nin embed?", true);
                 channel.sendMessage(embed.build());
             } else if (text.equals("!todo")) {
                 EmbedBuilder embed = new EmbedBuilder().withColor(message.getAuthor().getColorForGuild(message.getGuild()));
-                embed.withTitle(message.getAuthor().getName() + "'s todolist");
                 StringBuilder list = new StringBuilder();
-                for (int i = 0; i < todo.get(message.getAuthor()).size(); i++) {
-                    list.append(todo.get(message.getAuthor()).get(i)).append("\n");
+                if (todo.get(message.getAuthor()) == null) {
+                    list.append("is empty!");
+                } else for (int i = 0; i < todo.get(message.getAuthor()).size(); i++) {
+                    list.append('>').append(todo.get(message.getAuthor()).get(i)).append('\n');
                 }
-                embed.appendField("", list.toString(), true);
+                embed.appendField(message.getAuthor().getName() + "'s todolist", list.toString(), true);
                 channel.sendMessage(embed.build());
             } else if (text.startsWith("!todoadd ")) {
-                text = text.substring(8);
+                text = text.substring(text.indexOf(' ') + 1);
+                if (todo.get(message.getAuthor()) == null) {
+                    todo.put(message.getAuthor(), new ArrayList<String>());
+                }
                 todo.get(message.getAuthor()).add(text);
             }
         } else if (event instanceof ReadyEvent) {

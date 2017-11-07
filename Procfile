@@ -1,1 +1,1 @@
-worker: java -cp .:./target/classes/:./target/dependency/*:./target/dependencies/Discord4j-2.9.2-shaded.jar Main
+worker: sh target/classes/main
