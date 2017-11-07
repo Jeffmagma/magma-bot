@@ -1,1 +1,1 @@
-worker: sh target/classes/Main
+web: java -jar out/artifacts/magma_bot_jar/magma-bot.jar
