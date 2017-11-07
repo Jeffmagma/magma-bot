@@ -20,7 +20,7 @@ public class MagmaBot implements IListener<Event> {
 
     MagmaBot(IDiscordClient client) {
         this.client = client;
-        todo = new HashMap<IUser, ArrayList<String>>();
+        todo = new HashMap<>();
     }
 
     public void handle(Event event) {
@@ -48,9 +48,7 @@ public class MagmaBot implements IListener<Event> {
                 channel.sendMessage(embed.build());
             } else if (text.startsWith("!todoadd ")) {
                 text = text.substring(text.indexOf(' ') + 1);
-                if (todo.get(message.getAuthor()) == null) {
-                    todo.put(message.getAuthor(), new ArrayList<String>());
-                }
+                todo.computeIfAbsent(message.getAuthor(), k -> new ArrayList<>());
                 todo.get(message.getAuthor()).add(text);
             }
         } else if (event instanceof ReadyEvent) {
